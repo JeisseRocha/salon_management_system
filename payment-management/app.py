@@ -1,4 +1,3 @@
-
 import stripe
 import os
 
@@ -9,14 +8,7 @@ from dotenv import load_dotenv, find_dotenv
 # Setup Stripe python client library.
 load_dotenv(find_dotenv())
 
-# Ensure environment variables are set.
-# price = os.getenv('PRICE')
-# if price is None or price == 'price_12345' or price == '':
-#     print('You must set a Price ID in .env. Please see the README.')
-#     exit(0)
 
-
-# stripe.api_version = '2022-04-04'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 static_dir = str(os.path.abspath(os.path.join(
@@ -50,7 +42,7 @@ def get_checkout_session():
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-    quantity = request.form.get('quantity', 1)
+    quantity = request.args.get('quantity')
     price = request.args.get('price')
     domain_url = os.getenv('DOMAIN')
 
@@ -68,6 +60,36 @@ def create_checkout_session():
             }]
         )
         return redirect(checkout_session.url, code=303)
+    except Exception as e:
+        return jsonify(error=str(e)), 403
+
+
+@app.route('/create-product', methods=['POST'])
+def create_product():
+    name = request.args.get('name')
+    description = request.args.get('description')
+    amount = request.args.get('amount')
+
+    try:
+        # create product with price
+        product = stripe.Product.create(name=name, description=description)
+        stripe.Price.create(
+            currency="eur",
+            unit_amount_decimal=amount,
+            product=product.id,
+        )
+        return jsonify(product)
+
+    except Exception as e:
+        return jsonify(error=str(e)), 403
+
+
+@app.route('/price-list', methods=['GET'])
+def price_list():
+    try:
+        price = stripe.Price.list()
+        return jsonify(price)
+
     except Exception as e:
         return jsonify(error=str(e)), 403
 
