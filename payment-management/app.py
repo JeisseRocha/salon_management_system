@@ -35,9 +35,8 @@ def get_publishable_key():
 # Fetch the Checkout Session to display the JSON result on the success page
 @app.route('/checkout-session', methods=['GET'])
 def get_checkout_session():
-
-    id = request.args.get('sessionId')
-    checkout_session = stripe.checkout.Session.retrieve(id)
+    sessionId = request.args.get('sessionId')
+    checkout_session = stripe.checkout.Session.retrieve(sessionId)
     return jsonify(checkout_session)
 
 
