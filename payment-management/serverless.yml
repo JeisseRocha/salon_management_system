@@ -8,6 +8,13 @@ custom:
   wsgi:
     app: app.app
 
+package:
+  individually: false
+  exclude:
+    - package.json
+    - package-log.json
+    - node_modules/**
+
 provider:
   name: aws
   runtime: python3.8

@@ -207,7 +207,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/payment-management/dev/1649489827111-2022-04-09T07:37:07.111Z/payment-management.zip"
+          "S3Key": "serverless/payment-management/dev/1649573186035-2022-04-10T06:46:26.035Z/payment-management.zip"
         },
         "Handler": "s_api.handler",
         "Runtime": "python3.8",
@@ -225,14 +225,14 @@
         "ApiLogGroup"
       ]
     },
-    "ApiLambdaVersionD0jM2xdNVR7zLdRHS36b2e8OIPl3oED3k1jSJY6E": {
+    "ApiLambdaVersionFSod0RmhARN4LLp76Nk6dhItcvcgvP2LUdqPDKlftM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ApiLambdaFunction"
         },
-        "CodeSha256": "8nkkqaN6pqg6/IE5H787tKVpXP8GJ3d1yYddb9GO2Dk="
+        "CodeSha256": "7/N+PjLvKy7v5HejRrLDV4EgeoQoYtnK9e7+BwE+CAk="
       }
     },
     "HttpApi": {
@@ -390,7 +390,7 @@
     "ApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersionD0jM2xdNVR7zLdRHS36b2e8OIPl3oED3k1jSJY6E"
+        "Ref": "ApiLambdaVersionFSod0RmhARN4LLp76Nk6dhItcvcgvP2LUdqPDKlftM"
       },
       "Export": {
         "Name": "sls-payment-management-dev-ApiLambdaFunctionQualifiedArn"
