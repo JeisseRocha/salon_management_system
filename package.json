@@ -1,0 +1,14 @@
+{
+  "name": "payment-management",
+  "version": "1.0.0",
+  "description": "Example of a Python Flask API service with traditional Serverless Framework",
+  "author": "",
+  "scripts": {
+    "deploy": "serverless deploy"
+  },
+  "devDependencies": {
+    "serverless": "^1.67.0",
+    "serverless-python-requirements": "^5.4.0",
+    "serverless-wsgi": "^1.7.6"
+  }
+}
