@@ -74,7 +74,7 @@
     "ApiLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/payment-management-dev-api"
+        "LogGroupName": "/aws/lambda/payment-management-api-dev-api"
       }
     },
     "IamRoleLambdaExecution": {
@@ -102,7 +102,7 @@
               "Fn::Join": [
                 "-",
                 [
-                  "payment-management",
+                  "payment-management-api",
                   "dev",
                   "lambda"
                 ]
@@ -119,7 +119,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/payment-management-dev*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/payment-management-api-dev*:*"
                     }
                   ]
                 },
@@ -130,7 +130,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/payment-management-dev*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/payment-management-api-dev*:*:*"
                     }
                   ]
                 }
@@ -143,7 +143,7 @@
           "Fn::Join": [
             "-",
             [
-              "payment-management",
+              "payment-management-api",
               "dev",
               {
                 "Ref": "AWS::Region"
@@ -154,52 +154,6 @@
         }
       }
     },
-    "EnterpriseLogAccessIamRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": "arn:aws:iam::802587217904:root"
-              },
-              "Action": "sts:AssumeRole",
-              "Condition": {
-                "StringEquals": {
-                  "sts:ExternalId": "ServerlessEnterprise-6fab44b3-c11b-4163-b09f-a88dcc38ec7f"
-                }
-              }
-            }
-          ]
-        },
-        "Policies": [
-          {
-            "PolicyName": "LogFilterAccess",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:FilterLogEvents"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::GetAtt": [
-                        "ApiLogGroup",
-                        "Arn"
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
     "ApiLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
@@ -207,11 +161,11 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/payment-management/dev/1649575551999-2022-04-10T07:25:51.999Z/payment-management.zip"
+          "S3Key": "serverless/payment-management-api/dev/1650208830449-2022-04-17T15:20:30.449Z/payment-management-api.zip"
         },
-        "Handler": "s_api.handler",
+        "Handler": "wsgi_handler.handler",
         "Runtime": "python3.8",
-        "FunctionName": "payment-management-dev-api",
+        "FunctionName": "payment-management-api-dev-api",
         "MemorySize": 1024,
         "Timeout": 6,
         "Role": {
@@ -225,27 +179,21 @@
         "ApiLogGroup"
       ]
     },
-    "ApiLambdaVersionE8oCEM6or8gBW9wFE70AGlRTg4dMzS2eKTSmlxkbpzo": {
+    "ApiLambdaVersionb5m2mAyJFUs3NWzBohWX5LDvOvkKOdpwGUIWg9Vrss": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ApiLambdaFunction"
         },
-        "CodeSha256": "C8ssqN4F/6Id9TGPRc5Rl3lpJ5jUHRnPFVkgF+eIpjc="
+        "CodeSha256": "cSHc9feqtDLp/Uw4A+F2ZnMQJoEZaw8jkQRIcBpq6FI="
       }
     },
     "HttpApi": {
       "Type": "AWS::ApiGatewayV2::Api",
       "Properties": {
-        "Name": "dev-payment-management",
+        "Name": "dev-payment-management-api",
         "ProtocolType": "HTTP"
-      }
-    },
-    "HttpApiLogGroup": {
-      "Type": "AWS::Logs::LogGroup",
-      "Properties": {
-        "LogGroupName": "/aws/http-api/payment-management-dev"
       }
     },
     "HttpApiStage": {
@@ -258,18 +206,8 @@
         "AutoDeploy": true,
         "DefaultRouteSettings": {
           "DetailedMetricsEnabled": false
-        },
-        "AccessLogSettings": {
-          "DestinationArn": {
-            "Fn::GetAtt": [
-              "HttpApiLogGroup",
-              "Arn"
-            ]
-          },
-          "Format": "{\"requestTime\":\"$context.requestTime\",\"requestId\":\"$context.requestId\",\"apiId\":\"$context.apiId\",\"resourcePath\":\"$context.routeKey\",\"path\":\"$context.path\",\"httpMethod\":\"$context.httpMethod\",\"stage\":\"$context.stage\",\"status\":\"$context.status\",\"integrationStatus\":\"$context.integrationStatus\",\"integrationLatency\":\"$context.integrationLatency\",\"responseLatency\":\"$context.responseLatency\",\"responseLength\":\"$context.responseLength\",\"errorMessage\":\"$context.error.message\",\"format\":\"SLS_HTTP_API_LOG\",\"version\":\"1.0.0\"}"
         }
-      },
-      "DependsOn": "HttpApiLogGroup"
+      }
     },
     "ApiLambdaPermissionHttpApi": {
       "Type": "AWS::Lambda::Permission",
@@ -345,26 +283,6 @@
         }
       },
       "DependsOn": "HttpApiIntegrationApi"
-    },
-    "CWLSubFilterApiLogGroupUsEast1": {
-      "Type": "AWS::Logs::SubscriptionFilter",
-      "Properties": {
-        "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:6fab44b3-c11b-4163-b09f-a88dcc38ec7f#X2NcvHBkKJVyvWxr8Q#payment-management#dev",
-        "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
-        "LogGroupName": {
-          "Ref": "ApiLogGroup"
-        }
-      }
-    },
-    "CWLSubFilterHttpApiLogGroupUsEast1": {
-      "Type": "AWS::Logs::SubscriptionFilter",
-      "Properties": {
-        "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:6fab44b3-c11b-4163-b09f-a88dcc38ec7f#X2NcvHBkKJVyvWxr8Q#payment-management#dev",
-        "FilterPattern": "\"SLS_HTTP_API_LOG\"",
-        "LogGroupName": {
-          "Ref": "HttpApiLogGroup"
-        }
-      }
     }
   },
   "Outputs": {
@@ -373,27 +291,16 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-payment-management-dev-ServerlessDeploymentBucketName"
-      }
-    },
-    "EnterpriseLogAccessIamRole": {
-      "Value": {
-        "Fn::GetAtt": [
-          "EnterpriseLogAccessIamRole",
-          "Arn"
-        ]
-      },
-      "Export": {
-        "Name": "sls-payment-management-dev-EnterpriseLogAccessIamRole"
+        "Name": "sls-payment-management-api-dev-ServerlessDeploymentBucketName"
       }
     },
     "ApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersionE8oCEM6or8gBW9wFE70AGlRTg4dMzS2eKTSmlxkbpzo"
+        "Ref": "ApiLambdaVersionb5m2mAyJFUs3NWzBohWX5LDvOvkKOdpwGUIWg9Vrss"
       },
       "Export": {
-        "Name": "sls-payment-management-dev-ApiLambdaFunctionQualifiedArn"
+        "Name": "sls-payment-management-api-dev-ApiLambdaFunctionQualifiedArn"
       }
     },
     "HttpApiId": {
@@ -402,7 +309,7 @@
         "Ref": "HttpApi"
       },
       "Export": {
-        "Name": "sls-payment-management-dev-HttpApiId"
+        "Name": "sls-payment-management-api-dev-HttpApiId"
       }
     },
     "HttpApiUrl": {
@@ -427,7 +334,7 @@
         ]
       },
       "Export": {
-        "Name": "sls-payment-management-dev-HttpApiUrl"
+        "Name": "sls-payment-management-api-dev-HttpApiUrl"
       }
     }
   }

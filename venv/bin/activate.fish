@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/jeisse.rocha/Documents/PGDCLOUD/scp/salon_management_system/payment-management/venv"
+set -gx VIRTUAL_ENV "/Users/jeisse.rocha/Documents/PGDCLOUD/scp/salon_management_system/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
