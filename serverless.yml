@@ -1,10 +1,13 @@
 
-app: payment-management
-service: payment-management
+app: payment-management-api
+service: payment-management-api
 
 frameworkVersion: '3'
 
 custom:
+  pythonRequirements:
+    useDownloadCache: false
+
   wsgi:
     app: app.app
 
