@@ -34,7 +34,7 @@ def get_publishable_key():
 
 @app.route('/payments', methods=['GET'])
 def get_publishable_key():
-    price = stripe.Price.retrieve(os.getenv('PRICE'))
+
     return jsonify({
         'test': 'test payment'
     })
