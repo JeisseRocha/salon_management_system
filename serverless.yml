@@ -1,6 +1,6 @@
 
-app: payment-management-api
-service: payment-management-api
+app: payment-management
+service: payment-management
 
 frameworkVersion: '3'
 
