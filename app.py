@@ -33,7 +33,7 @@ def get_publishable_key():
 
 
 @app.route('/payments', methods=['GET'])
-def get_publishable_key():
+def payment():
 
     return jsonify({
         'publicKey': os.getenv('STRIPE_PUBLISHABLE_KEY')
