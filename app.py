@@ -36,7 +36,7 @@ def get_publishable_key():
 def get_publishable_key():
 
     return jsonify({
-        'test': 'test payment'
+        'publicKey': os.getenv('STRIPE_PUBLISHABLE_KEY')
     })
 
 
