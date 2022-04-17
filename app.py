@@ -32,6 +32,14 @@ def get_publishable_key():
     })
 
 
+@app.route('/payments', methods=['GET'])
+def get_publishable_key():
+    price = stripe.Price.retrieve(os.getenv('PRICE'))
+    return jsonify({
+        'test': 'test payment'
+    })
+
+
 # Fetch the Checkout Session to display the JSON result on the success page
 @app.route('/checkout-session', methods=['GET'])
 def get_checkout_session():
